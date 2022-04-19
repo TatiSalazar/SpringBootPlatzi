@@ -58,3 +58,19 @@ Una Anotación es una forma de añadir metadatos al código fuente Java que est�
 Si nuestra clase o interfaz no tiene una especificación clara como @Service, @Repository o @Controller, simplemente recurrimos a @Component y le indicamos que sencillamente es un componente.
 
 Por otro lado, no es estrictamente necesario que cumplas con colocar una notación especifica, pero es una buena practica.
+
+# Qué son los logs y cómo usarlos
+
+Son una herramienta que nos permite debugear la información, es decir; saber por donde esta pasando la información, por cual método, cual clase y con que nivel de depuración lo queremos mostrar.
+
+Para esto tenemos en Spring, la Liberia Apache Commons la cual tiene lo siguientes niveles de log:
+
+* Error: Nos permite mostrar información cuando ocurre un error.
+
+* Info: Nos muestra información muy general
+
+* Debug: Este nos sirve para depurar por donde esta pasando la información a nivel de código fuente.
+
+Otros, ver documentación:
+
+Apache Commons - Apache Commons
