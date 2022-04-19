@@ -74,3 +74,6 @@ Para esto tenemos en Spring, la Liberia Apache Commons la cual tiene lo siguient
 Otros, ver documentación:
 
 Apache Commons - Apache Commons
+
+# Que es JPA (Java Persistence API )
+Especificacion de Java para acceder, conservar y administrar datos entre objetos o clases y una base de datos relacional.
