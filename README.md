@@ -77,3 +77,18 @@ Apache Commons - Apache Commons
 
 # Que es JPA (Java Persistence API )
 Especificacion de Java para acceder, conservar y administrar datos entre objetos o clases y una base de datos relacional.
+
+# Programación funciona
+
+* En el paradigma, un programa se considera una funcion matematica, la cual describe una relacion entre una entrada y una salida, y donde el concepto de estado de una variables se elimina completamente
+* Fácil de combinar con la programacion orientada a objetos 
+* Uso de listas como estructuras de datos funcionales. No hay bucles, solo vas a iterar arrays o listas.
+* No existen los bucles "for" y "while", para su iteracion se usa la recursividad.
+* Funciones como tipos de datos primitivos, expresiones lambda y funciones de orden superior.
+## Beneficios
+* Testing: Al tener el codigo mas granular, se facilita la ejecucion de pruebas.
+* Legibilidad: Funciones mas explicitas en cuanto a lo que hacen y no en como lo hacen.
+* Comportamientos mas definidos: los comportamientos son definidos a traves de funciones simples (siendo estas fdaciles de entender)
+*  Concurrencia: es posible liberar muchos procesos simultaneos a partir de una sola funcion.
+*  Menos manejo de estados: no nos preocupamos por la complejidad que puede agregar otros paradigmas de programacion como POO.
+
