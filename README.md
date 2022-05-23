@@ -92,3 +92,10 @@ Especificacion de Java para acceder, conservar y administrar datos entre objetos
 *  Concurrencia: es posible liberar muchos procesos simultaneos a partir de una sola funcion.
 *  Menos manejo de estados: no nos preocupamos por la complejidad que puede agregar otros paradigmas de programacion como POO.
 
+## Que es una funcion?
+Una funcion es un tipo de dato que puede operar sobre un dato x y genera un valor y, igualmente por cada x siempre genera y. 
+* Serie de pasos parametrizados
+* Puede o no devolver un resultado
+* Se puede definir, almacenr o declarar bajo demanda
+
+
