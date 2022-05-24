@@ -155,4 +155,20 @@ Es un comportamiento de uso único
 Una regla que solo se requiere en un lugar
 Es una función extremadamente simple.
 Una lambda sigue siendo una función.
+Es una función muy simple (1 línea).
+Es una regla que solo se requiere en un lugar.
+
+**Inmutabilidad**
+Inmutabilidad
+Un objeto inmutable es aquel cuyo estado no se puede cambiar una vez construído.
+
+ **Ventajas :**
+* Una vez creado no se puede alterar.
+* Facilidad para crear funciones puras.
+* Facilidad para usar threads/concurrencia.
+**Desventajas :**
+* Cuando se necesecite alterar un datos, se requiere crear una nueva instancia por cada set modificado.
+* Requiere especial atención al diseño.
+* Los objetos mutables están fuera de nuestro alcance, porque se vuelven inpredecibles
+
 
