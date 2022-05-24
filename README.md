@@ -131,7 +131,7 @@ Sin embargo, se deben reducir los efectos secundarios, porque ayuda a tener una 
 * Toma otra funciona como parámetro.
 * Retorna una función después de su ejecución
 
-** Ventajas
+** Ventajas **
 * Pasar comportamientos
 * Compartir un medio de comunicación
 * Compartir logica/reglas
@@ -141,5 +141,18 @@ Sin embargo, se deben reducir los efectos secundarios, porque ayuda a tener una 
   retorna una función como resultado
   Function bar (int x)
 
+# Funciones lambda
+* Función: Tiene un nombre
+* Lambda: Función que no tiene un nombre (anonima)
 
+Parten de un concepto matemático de los años 30 
+(Alonzo Church).
+Obetener resultados a partir de funciones anónimas.
+Son funciones anónimas
+
+**¿Por que usarlas?**
+Es un comportamiento de uso único
+Una regla que solo se requiere en un lugar
+Es una función extremadamente simple.
+Una lambda sigue siendo una función.
 
