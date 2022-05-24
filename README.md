@@ -98,4 +98,48 @@ Una funcion es un tipo de dato que puede operar sobre un dato x y genera un valo
 * Puede o no devolver un resultado
 * Se puede definir, almacenr o declarar bajo demanda
 
+# Funcion pura
+Determinista (resultado predecible). Facil de probar. Su resultado será siempre el mismo al recibir siempre los mismos parametros. No dependen del contexto ,siempre generará el mismo resultado y no generará efectos secundarios, es decir no afectará datos de entrada ni otros datos relativos a otros flujos de datos. No dependen del estado del sistema.
+// pura
+	var checarEdad = function(edad) {
+		var minimo = 18;
+		return edad >= minimo;
+		};
+
+# Funcion impura
+No determinista. Dependen del estado del sistema. Dependen de su contexto. Pueden generar efectos secuendarios, es decir, pueden afectar a otros flujos de datos o verse afectadas por otros flujos de datos subyacentes. No son predecibles.
+
+var minimo = 18;
+	var checarEdad = function(edad) {
+		return edad >= minimo;
+		};
+    
+En la impura, la var_mininmo es global, por lo tanto su estado puede cambiar(mutable), una misma entrada podría dar resultados distintos, dependiendo de su estado.
+
+# Efecto secundario
+Un efecto secundario es todo cambio observable desde fuera del sistema es un efecto secundario.
+Los efectos secundarios son inevitables. Ejemplo:
+* CRUD sobre archivos
+* CRUD sobre una base de datos
+* Enviar/Recibir una llamada de red
+* Alterar un objeto/variable usada por otras funciones
+
+Sin embargo, se deben reducir los efectos secundarios, porque ayuda a tener una mejor estructura del código (favoreciendo la generación de funciones puras, la modularidad y la testeabilidad).
+
+
+# Función de orden mayor
+* Toma otra funciona como parámetro.
+* Retorna una función después de su ejecución
+
+** Ventajas
+* Pasar comportamientos
+* Compartir un medio de comunicación
+* Compartir logica/reglas
+
+  int foo ( Function param )
+  
+  retorna una función como resultado
+  Function bar (int x)
+
+
 
