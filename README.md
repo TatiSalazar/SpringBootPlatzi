@@ -171,4 +171,48 @@ Un objeto inmutable es aquel cuyo estado no se puede cambiar una vez construído
 * Requiere especial atención al diseño.
 * Los objetos mutables están fuera de nuestro alcance, porque se vuelven inpredecibles
 
+## Predicate: 
+Un Predicado es un interface funcional que define una condición que un objeto determinado debe cumplir.
+recibe un dato y devuelve un boolean. 
+Se invoca con test() 
+Predicated<integer> ispar = x -> x % 2 == 0; 
+ispar.test(5) //false 
+ispar.test(6) // true
 
+## Consumer: 
+Es una expresion lambda que acepta un solo valor y no devuelven valor alguno.
+Se utiliza para ejecutar la misma operación en un tipo de objeto especifico.
+	Consumer -> Consumidor
+	Consumer de alguien que RECIBE datos
+Ejemplo: Una funcion que reciba una lista de archivos y borre cada uno de ellos, sin devolver nada.
+	
+Consumer<Student> saveProgressInDataBase = student -> db.updateStudent(student);
+
+Supplier<String> randomPasswordGenerator = () -> complexAlgorithm.generate() ;
+	
+**Consumer y Supplier** es cuando mandas a llamar una lista de entidades de una tabla en BD. Con **Consumer**conviertes las entidades en DTOS y después lo invocas desde un **Supplier** para que éste genere la lista final.
+	
+## Supplier:
+Es una expresion que no tienen parámetros pero devuelven un resultado.
+Se utiliza para generar objetos de un tipo
+	Supplier -> Proveedor
+	Supplier es alguien que SUMINISTRA datos
+Ejemplo: Se crea un supplier de tipo CLIArguments llamado generator que no recibe ni un parametro pero que crea un nuevo objeto CLIArguments y retorna generator, Se pueden crear archivos bajo demanda.
+
+## UnaryOPerator
+Solo se especifica un solo tipo de dato. Se entiende que tendrá como resultado el mismo tipo.
+
+## BinaryOperator 
+Solo se especifica un tipo de dato. Se entiende que tendrá 2 parámetros de entrada y el uno de retorno del mismo tipo de dato.
+
+## Bifunction 
+2 parámetros de entrada, se tiene que especificar el tipo de dato. Puede tener diferentes tipos de entradas como también diferente tipo de salida.
+
+## SAM  -> Single Abstrab Method
+Es una interfaz que tiene un solo método sin definir. 
+
+## @FuctionalInterface
+Una interfaz funcional es una interfaz que contiene solo un método abstracto. 
+Solo pueden tener una funcionalidad para exhibir. Desde Java 8 en adelante, las expresiones lambda se pueden usar para representar la instancia de una interfaz funcional. Una interfaz funcional puede tener cualquier número de métodos predeterminados. Runnable, ActionListener, Comparable son algunos de los ejemplos de interfaces funcionales. Antes de Java 8, teníamos que crear objetos de clase internos anónimos o implementar estas interfaces.
+
+La anotación se utiliza para garantizar que la interfaz funcional no pueda tener más de un método abstracto. En caso de que haya más de un método abstracto presente, el compilador marca un mensaje de 'anotación @FunctionalInterface inesperada'. Sin embargo, no es obligatorio utilizar esta anotación.
