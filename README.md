@@ -216,3 +216,30 @@ Una interfaz funcional es una interfaz que contiene solo un método abstracto.
 Solo pueden tener una funcionalidad para exhibir. Desde Java 8 en adelante, las expresiones lambda se pueden usar para representar la instancia de una interfaz funcional. Una interfaz funcional puede tener cualquier número de métodos predeterminados. Runnable, ActionListener, Comparable son algunos de los ejemplos de interfaces funcionales. Antes de Java 8, teníamos que crear objetos de clase internos anónimos o implementar estas interfaces.
 
 La anotación se utiliza para garantizar que la interfaz funcional no pueda tener más de un método abstracto. En caso de que haya más de un método abstracto presente, el compilador marca un mensaje de 'anotación @FunctionalInterface inesperada'. Sin embargo, no es obligatorio utilizar esta anotación.
+	
+## Sintaxis de lambda
+Si la lambda NO recibe argumentos:
+** ( ) -> operación **
+Si la lambda recibe 1 argumento:
+**_argumento -> operación**
+**( argumento ) -> operación_**
+Si la lambda recibe mas de 1 argumento:
+**( argumento1, argumento2) -> operación**
+Si la lambda recibe varias operaciones:
+**( ) -> { operacion1; return operación2; }
+argumento -> { operacion1; return operacion2; }
+( argumento ) -> { operacion1; return operacion2; }
+( argumento1, argumento2) -> { operacion1; return operacion2 }**
+
+Si la lambda tiene mas de una operación debemos retornar un valor mediante.
+**return**
+
+Pero si NO devuelve nada, solo hay que indicar el tipo de entrada vacío.
+
+**( ) -> { operación }**
+
+Para evitar errores es mejor usar
+**( ) -> { operación }**
+para cualquier caso.
+
+	
