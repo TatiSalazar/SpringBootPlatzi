@@ -340,3 +340,77 @@ La operación de findAny trata de encontrar cualquier elemento que cumpla con la
 ## Paralelismo
 A través del método .parallel() podremos poner a trabajar los demás procesadores de nuestro equipo para que compilen más rápido el Stream y esto va ser ideal cuanto se manejen grandes cantidades de datos.
 
+## Operaciones Terminales
+Las operaciones terminales son aquellas operaciones que como resultado no generan un nuevo Stream. Su resultado puede variar según la operación. La utilidad de estas es poder generar un valor final a todas nuestras operaciones o consumir los datos finales. La razón principal para querer esto es que los datos deberán salir en algún punto de nuestro control y es con las operaciones terminales que hacemos esto.
+
+Las operaciones terminales más comunes que se encuentran en Stream son:
+
+* anyMatch()
+* allMatch()
+* noneMatch()
+* findAny()
+* findFirst()
+* min()
+* max()
+* reduce()
+* count()
+* toArray()
+* collect()
+* forEach()
+	
+## Operaciones terminales de coincidencia
+**anyMatch, allMatch, noneMatch**
+Las operaciones anyMatch, allMatch y noneMatch sirven para determinar si en un Stream hay elementos que cumplan con un cierto Predicate. Esto puede ser una forma simple de validar los datos de un Stream. Son terminales pues las tres retornan un boolean:
+```java
+//Nos indica si un stream contiene un elemento según el Predicate que le pasemos:
+Stream numbersStream = Stream.of(1, 2, 3, 4, 5, 6, 7, 11);
+boolean biggerThanTen = numbersStream.anyMatch(i -> i > 10); //true porque tenemos el 11
+
+//allMatch
+//Nos indica si todos los elementos de un Stream cumplen con un cierto Predicate:
+Stream agesStream = Stream.of(19, 21, 35, 45, 12);
+boolean allLegalDrinkingAge = agesStream.allMatch(age -> age > 18); //false, tenemos un menor
+
+//noneMatch
+//Nos indica si todos los elementos de un Stream NO CUMPLEN un cierto Predicate:
+Stream oddNumbers = Stream.of(1, 3, 5, 7, 9, 11);
+boolean allAreOdd = oddNumbers.noneMatch(i -> i % 2 == 0);
+```
+## Operaciones terminales de búsqueda
+
+**findAny, findFirst**
+	
+Estas operaciones retornan un Optional como resultado de buscar un elemento dentro del Stream.
+
+La diferencia entre ambas es que findFirst retornara un Optional conteniendo el primer elemento en el Stream si el Stream tiene definida previamente una operación de ordenamiento o para encontrar elementos. De lo contrario, funcionará igual que findAny, tratando de devolver cualquier elemento presente en el Stream de forma no determinista (random)
+
+Si el elemento encontrado es null, tendrás que lidiar con una molesta NullPointerException. Si el Stream esta vacío, el retorno es equivalente a Optional.empty().
+
+La principal razón para usar estas operaciones es poder usar los elementos de un Stream después haber filtrado y convertido tipos de datos. Con Optional nos aseguramos que, aún si no hubiera resultados, podremos seguir trabajando sin excepciones o escribiendo condicionales para validar los datos.
+	
+## Operaciones terminales de reducción
+**min,max**
+Son dos operaciones cuya finalidad es obtener el elemento más pequeño (min) o el elemento más grande (max) de un Stream usando un Comparator. Puede haber casos de Stream vacíos, es por ello que las dos operaciones retornan un Optional para en esos casos poder usar Optional.empty.
+
+La interfaz Comparator es una @FunctionalInterface, por lo que es sencillo usar min y max con lambdas:
+```java
+Stream bigNumbers = Stream.of(100L, 200L, 1000L, 5L);
+Optional minimumOptional = bigNumbers.min((numberX, numberY) -> (int) Math.min(numberX, numberY));
+```
+##reduce
+Esta operación existe en tres formas:
+
+*reduce(valorInicial, BinaryOperator)
+*reduce(BinaryAccumulator)
+*reduce(valorInicial, BinaryFunction, BinaryOperator)
+*La diferencia entre los 3 tipos de invocación:
+
+**reduce(BinaryAccumulator)**
+Retorna un Optional del mismo tipo que el Stream, con un solo valor resultante de aplicar el BinaryAccumulator sobre cada elemento o Optional.empty() si el stream estaba vacío. Puede generar un NullPointerException en casos donde el resultado de BinaryAccumulator sea null.
+
+```java
+Stream aLongStoryStream = Stream.of("Cuando", "despertó,", "el", "dinosaurio", "todavía", "estaba", "allí.");
+Optional longStoryOptional = aLongStoryStream.reduce((previousStory, nextPart) -> previousStory + " " + nextPart);
+longStoryOptional.ifPresent(System.out::println); //"Cuando despertó, el dinosaurio todavía estaba allí."
+```
+	
