@@ -397,13 +397,13 @@ La interfaz Comparator es una @FunctionalInterface, por lo que es sencillo usar 
 Stream bigNumbers = Stream.of(100L, 200L, 1000L, 5L);
 Optional minimumOptional = bigNumbers.min((numberX, numberY) -> (int) Math.min(numberX, numberY));
 ```
-##reduce
+## reduce
 Esta operación existe en tres formas:
 
-*reduce(valorInicial, BinaryOperator)
-*reduce(BinaryAccumulator)
-*reduce(valorInicial, BinaryFunction, BinaryOperator)
-*La diferencia entre los 3 tipos de invocación:
+* reduce(valorInicial, BinaryOperator)
+* reduce(BinaryAccumulator)
+* reduce(valorInicial, BinaryFunction, BinaryOperator)
+ *La diferencia entre los 3 tipos de invocación:
 
 **reduce(BinaryAccumulator)**
 Retorna un Optional del mismo tipo que el Stream, con un solo valor resultante de aplicar el BinaryAccumulator sobre cada elemento o Optional.empty() si el stream estaba vacío. Puede generar un NullPointerException en casos donde el resultado de BinaryAccumulator sea null.
@@ -413,4 +413,36 @@ Stream aLongStoryStream = Stream.of("Cuando", "despertó,", "el", "dinosaurio", 
 Optional longStoryOptional = aLongStoryStream.reduce((previousStory, nextPart) -> previousStory + " " + nextPart);
 longStoryOptional.ifPresent(System.out::println); //"Cuando despertó, el dinosaurio todavía estaba allí."
 ```
+**reduce(valorInicial, BinaryOperator)**
+Retorna un valor del mismo tipo que el Stream después de aplicar BinaryOperator sobre cada elemento del Stream. En caso de un Stream vacío, el valorInicial es retornado.
+
+```java
+Stream firstTenNumbersStream = Stream.iterate(0, i -> i + 1).limit(10);
+int sumOfFirstTen = firstTenNumbersStream.reduce(0, Integer::sum); //45 -> 0 + 1 + … + 9
+```
 	
+**reduce(valorInicial, BinaryFunction, BinaryOperator)**
+Genera un valor de tipo V después de aplicar BinaryFunction sobre cada elemento de tipo T en el Stream y obtener un resultado V.
+
+Esta version de reduce usa el BinaryFunction como map + reduce. Es decir, por cada elemento en el Stream se genera un valor V basado en el valorInicial y el resultado anterior de la BinaryFunction. BinaryOperator se utiliza en streams paralelos (stream.parallel()) para determinar el valor que se debe mantener en cada iteración.
+
+```java
+Stream aLongStoryStreamAgain = Stream.of("Cuando", "despertó,", "el", "dinosaurio", "todavía", "estaba", "allí.");
+int charCount = aLongStoryStreamAgain.reduce(0, (count, word) -> count + word.length(), Integer::sum);	
+```
+
+## Count
+Una operación sencilla: sirve para obtener cuantos elementos hay en el Stream.
+	
+La principal razón de usar esta operación es que, al aplicar filter o flatMap, nuestro Stream puede crecer o disminuir de tamaño y, tal vez, de muchas operaciones solo nos interese saber cuántos elementos quedaron presentes en el Stream. Por ejemplo, cuantos archivos se borraron o cuantos se crearon por ejemplo.
+```java
+Stream yearsStream = Stream.of(1990, 1991, 1994, 2000, 2010, 2019, 2020);
+long yearsCount = yearsStream.count(); //7, solo nos dice cuantos datos tuvo el stream.	
+```	
+## toArray
+Agrega todos los elementos del Stream a un arreglo y nos retorna dicho arreglo. La operación genera un Object[], pero es sposible hacer castings al tipo de dato del Stream.
+
+## Collect
+Mencionamos la operación collect en la lectura sobre operaciones y collectors, donde mencionamos que:
+
+
