@@ -254,8 +254,8 @@ En un for pones todas las operaciones dentro del for o escribes multiples for. E
 * Es mas legible porque las operaciones son un poco mas explicitas (aunque depende del estilo de cada quien)
 * Tienes operaciones ya predefinidas
 * Hay muchas operaciones que son optimizadas en tiempo de compilacion
-* Puedes convertir facilmente un Stream<A> en un Stream<B> usando los metodos ya existentes en Stream
-* Puedes convertir facilmente muchas clases a Stream (por ejemplo, Collection#stream() )
+* Puedes convertir facilmente un StreamA en un StreamB usando los metodos ya existentes en Stream
+* Puedes convertir facilmente muchas clases a Stream (por ejemplo, Collectionstream() )
 * Al ser un tipo de dato puedes recibir o retornar Stream parcialmente operado:
 
 public Stream<User> getUserNamesStream(){
