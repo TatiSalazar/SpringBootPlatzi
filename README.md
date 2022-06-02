@@ -131,7 +131,7 @@ Sin embargo, se deben reducir los efectos secundarios, porque ayuda a tener una 
 * Toma otra funciona como parámetro.
 * Retorna una función después de su ejecución
 
-** Ventajas **
+**Ventajas**
 * Pasar comportamientos
 * Compartir un medio de comunicación
 * Compartir logica/reglas
@@ -254,18 +254,18 @@ En un for pones todas las operaciones dentro del for o escribes multiples for. E
 * Es mas legible porque las operaciones son un poco mas explicitas (aunque depende del estilo de cada quien)
 * Tienes operaciones ya predefinidas
 * Hay muchas operaciones que son optimizadas en tiempo de compilacion
-* Puedes convertir facilmente un Stream<A> en un Stream<B> usando los metodos ya existentes en Stream
-* Puedes convertir facilmente muchas clases a Stream (por ejemplo, Collection#stream()
+* Puedes convertir facilmente un **Stream<A>** en un **Stream<B>** usando los metodos ya existentes en **Stream**
+* Puedes convertir facilmente muchas clases a Stream (por ejemplo, **Collection#stream()**)
 * Al ser un tipo de dato puedes recibir o retornar Stream parcialmente operado:
 
 public Stream<User> getUserNamesStream(){
-    //Obtener los nombres de usuario
-    return userNamesStream;
+	//Obtener los nombres de usuario
+	return userNamesStream;
 }
     
 public Stream<String> getUserNamesByActiveStatus(Stream<String> users){
-        return users.filter(User::isActive)
-                .map(User::getUserName);
+	return users.filter(User::isActive)
+	.map(User::getUserName);
 }
 
 ## Algunos contras:
