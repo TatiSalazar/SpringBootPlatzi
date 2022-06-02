@@ -294,5 +294,45 @@ Stream<String> explicitOperationStream = coursesStream.filter(new Predicate<Stri
 * Predicate<T>: toma un dato de tipo T y evalúa si el dato cumple una condición
 * Supplier<T>: no recibe ningún dato, pero genera un dato de tipo T cada vez que es invocado
 * UnaryOperator<T> recibe un dato de tipo T y genera un resultado de tipo T
+	
+public class PlatziStream<T> implements Stream {
+    private List<T> data;
 
-A través del método **.parallel()** podremos poner a trabajar los demás procesadores de nuestro equipo para que compilen más rápido el Stream y esto va ser ideal cuanto se manejen grandes cantidades de datos. 
+    public Stream<T> filter(Predicate<T> predicate) {
+        List<T> filteredData = new LinkedList<>();
+        for(T t : data){
+            if(predicate.test(t)){
+                filteredData.add(t);
+            }
+        }
+
+        return filteredData.stream();
+    }
+}
+## Operaciones
+A estas funciones que reciben lambdas y se encargan de trabajar (operar) sobre los datos de un Stream generalmente se les conoce como Operaciones.
+Existen dos tipos de operaciones: intermedias y finales.
+
+Cada operación aplicada a un Stream hace que el Stream original ya no sea usable para más operaciones. Es importante recordar esto, pues tratar de agregar operaciones a un Stream que ya esta siendo procesado es un error muy común.
+
+En este punto seguramente te parezcan familiares todas estas operaciones, pues vienen en forma de métodos de la interfaz Stream. Y es cierto. Aunque son métodos, se les considera operaciones, puesto que su intención es operar el Stream y, posterior a su trabajo, el Stream no puede volver a ser operado.
+
+En clases posteriores hablaremos más a detalle sobre cómo identificar una operación terminal de una operación intermedia.
+
+## Collectors
+Una vez que has agregado operaciones a tu Stream de datos, lo más usual es que llegues a un punto donde ya no puedas trabajar con un Stream y necesites enviar tus datos en otro formato, por ejemplo, JSON o una List a base de datos.
+
+Existe una interfaz única que combina todas las interfaces antes mencionadas y que tiene como única utilidad proveer de una operación para obtener todos los elementos de un Stream: Collector.
+
+Collector<T, A, R> es una interfaz que tomará datos de tipo T del Stream, un tipo de dato mutable A, donde se iran agregando los elementos (mutable implica que podemos cambiar su contenido, como un LinkedList), y generara un resultado de tipo R.
+	
+public List<String> getJavaCourses(Stream<String> coursesStream) {
+    List<String> javaCourses =
+        coursesStream.filter(course -> course.contains("Java"))
+            .collect(Collectors.toList());
+
+    return javaCourses;
+}
+
+## Tipos de Retorno
+La operación de findAny trata de encontrar cualquier elemento que cumpla con la condición del Predicate que le pasamos como parámetro. Sin embargo, la operación dice que se devuelve un Optional. 
