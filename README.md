@@ -336,3 +336,7 @@ public List<String> getJavaCourses(Stream<String> coursesStream) {
 
 ## Tipos de Retorno
 La operación de findAny trata de encontrar cualquier elemento que cumpla con la condición del Predicate que le pasamos como parámetro. Sin embargo, la operación dice que se devuelve un Optional. 
+
+## Paralelismo
+A través del método .parallel() podremos poner a trabajar los demás procesadores de nuestro equipo para que compilen más rápido el Stream y esto va ser ideal cuanto se manejen grandes cantidades de datos.
+
