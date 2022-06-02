@@ -242,4 +242,36 @@ Para evitar errores es mejor usar
 **( ) -> { operación }**
 para cualquier caso.
 
+## Stream
+Se puede ver a un Stream como un iterador con esteroides, aumentado con el paradigma funcional. Por supuesto, esto es una forma muy básica de definirlo, pero al inicio facilita mucho imaginarlos de esta manera.
+La clase Stream esta pensada para que las iteraciones o el procesamiento de los elementos sea un poco mas “dinamicos”.
+	
+En un for pones todas las operaciones dentro del for o escribes multiples for. En Stream cada operacion modifica el Stream y genera un nuevo Stream. Idealmente un Stream tiene nuevos elementos constantemente, por ello no puedes tener un metodo size() o un atributo/metodo length, pues no sabes cuantos elementos apareceran en el Stream. En teoria no puedes determinar cuando un Stream dejara de publicar elementos (idealmente). Sin embargo tienes la posibilidad de operara cada nuevo elemento que aparezca en el Stream.
+	
+**Algunos pros de tener un Stream:**
+
+* Es mucho mas facil hacer operaciones en paralelo
+* Es mas legible porque las operaciones son un poco mas explicitas (aunque depende del estilo de cada quien)
+* Tienes operaciones ya predefinidas
+* Hay muchas operaciones que son optimizadas en tiempo de compilacion
+* Puedes convertir facilmente un Stream<A> en un Stream<B> usando los metodos ya existentes en Stream
+* Puedes convertir facilmente muchas clases a Stream (por ejemplo, Collection#stream()
+* Al ser un tipo de dato puedes recibir o retornar Stream parcialmente operado:
+
+public Stream<User> getUserNamesStream(){
+    //Obtener los nombres de usuario
+    return userNamesStream;
+}
+    
+public Stream<String> getUserNamesByActiveStatus(Stream<String> users){
+        return users.filter(User::isActive)
+                .map(User::getUserName);
+}
+
+## Algunos contras:
+
+* Cuando necesitas un dato final para mostrar o retornar algun dato final, tienes que convertir tu Stream
+* No tienes forma directa de frenar o saltarte pasos de una iteracion de un Stream a diferencia de un for donde puedes usar break y continue
+* Debes aprender la API de Stream
+* Buscar errores puede ser un poco mas complicado
 	
