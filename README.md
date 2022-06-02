@@ -254,8 +254,8 @@ En un for pones todas las operaciones dentro del for o escribes multiples for. E
 * Es mas legible porque las operaciones son un poco mas explicitas (aunque depende del estilo de cada quien)
 * Tienes operaciones ya predefinidas
 * Hay muchas operaciones que son optimizadas en tiempo de compilacion
-* Puedes convertir facilmente un **Stream<A>** en un Stream<B> usando los metodos ya existentes en **Stream**
-* Puedes convertir facilmente muchas clases a Stream (por ejemplo, **Collection#stream()** )
+* Puedes convertir facilmente un Stream<A> en un Stream<B> usando los metodos ya existentes en Stream
+* Puedes convertir facilmente muchas clases a Stream (por ejemplo, Collection#stream() )
 * Al ser un tipo de dato puedes recibir o retornar Stream parcialmente operado:
 
 public Stream<User> getUserNamesStream(){
@@ -274,4 +274,23 @@ public Stream<String> getUserNamesByActiveStatus(Stream<String> users){
 * No tienes forma directa de frenar o saltarte pasos de una iteracion de un Stream a diferencia de un for donde puedes usar break y continue
 * Debes aprender la API de Stream
 * Buscar errores puede ser un poco mas complicado
+
+**Ejemplo**
+Stream<String> coursesStream = Utils.getListOf("Java", "Node.js", "Kotlin").stream();
+
+Stream<String> javaCoursesStream = coursesStream.filter(course -> course.contains("Java"));
+
+
+// En realidad, es lo mismo que:
+
+Stream<String> explicitOperationStream = coursesStream.filter(new Predicate<String>() {
+    public boolean test(String st) {
+        return st.contains("Java");
+    }
+});
 	
+* Consumer<T>: recibe un dato de tipo T y no genera ningún resultado
+* Function<T,R>: toma un dato de tipo T y genera un resultado de tipo R
+* Predicate<T>: toma un dato de tipo T y evalúa si el dato cumple una condición
+* Supplier<T>: no recibe ningún dato, pero genera un dato de tipo T cada vez que es invocado
+* UnaryOperator<T> recibe un dato de tipo T y genera un resultado de tipo T
