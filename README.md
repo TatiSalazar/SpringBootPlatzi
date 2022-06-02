@@ -294,3 +294,5 @@ Stream<String> explicitOperationStream = coursesStream.filter(new Predicate<Stri
 * Predicate<T>: toma un dato de tipo T y evalúa si el dato cumple una condición
 * Supplier<T>: no recibe ningún dato, pero genera un dato de tipo T cada vez que es invocado
 * UnaryOperator<T> recibe un dato de tipo T y genera un resultado de tipo T
+
+A través del método **.parallel()** podremos poner a trabajar los demás procesadores de nuestro equipo para que compilen más rápido el Stream y esto va ser ideal cuanto se manejen grandes cantidades de datos. 
