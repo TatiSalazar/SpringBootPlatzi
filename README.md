@@ -533,6 +533,166 @@ courses.filter(course -> course.getName().contains("Java"))
     .filter(course -> course.getDuration() > 2.5)
     .filter(course -> course.getInstructor().getName() == Instructors.SINUHE_JAIME)
 ```
+Tu código sera más legible y las razones de por qué estás aplicando cada filtro tendrán más sentido. Como algo adicional podrías mover esta lógica a funciones individuales en caso de que quieras hacer más legible el código, tener más facilidad de escribir pruebas o utilices en más de un lugar la misma lógica para algunas lambdas:
+
+```java
+courses.filter(Predicates::isAJavaCourse)
+    .filter(Predicates::hasEnoughDuration)
+    .filter(Predicates::hasSinuheAsInstructor);
+
+// La lógica es la misma:
+public final class Predicates {
+    public static final boolean isAJavaCourse(Course course){
+        return course.getName().contains("Java");
+    }
+}
+```
+## map
+La operación map puede parecer complicada en un principio e incluso confusa si estas acostumbrado a usar Map, pero cabe resaltar que no hay relación entre la estructura y la operación. La operación es meramente una transformación de un tipo a otro.
+```java
+Stream map(Functionsuper T, ? extends R> mapper)
+```
+Los detalles a resaltar son muy similares a los de filter, pero la diferencia clave está en T y R. Estos generics nos dicen que map va a tomar un tipo de dato T, cualquiera que sea, le aplicara la función mapper y generara un R.
+
+Es algo similar a lo que hacías en la secundaria al convertir en una tabla datos, para cada x aplicabas una operación y obtenías una y (algunos llaman a esto tabular). map operará sobre cada elemento en el Stream inicial aplicando la Function que le pases como lambda para generar un nuevo elemento y hacerlo parte del Stream resultante:
+```java
+Stream ids = DatabaseUtils.getIds().stream();
+
+Stream users = ids.map(id -> db.getUserWithId(id));
+```
+O, puesto de otra forma, por cada DatabaseID en el Stream inicial, al aplicar map genera un User:
+
+DatabaseID(1234) -> map(…) -> User(Sinuhe Jaime, @Sierisimo)
+DatabaseID(4321) -> map(…) -> User(Diego de Granda, @degranda10)
+DatabaseID(007) -> map(…) ->User(Oscar Barajas, @gndx)
+Esto resulta bastante practico cuando queremos hacer alguna conversión de datos y realmente no nos interesa el dato completo (solo partes de él) o si queremos convertir a un dato complejo partiendo de un dato base.
+
+Si quisiéramos replicar qué hace internamente map sería relativamente sencillo:
+	
+```java
+public  Stream filter(Function mapper) {
+    List mappedData = new LinkedList<>();
+    for(T t : this.data){
+        R r = mapper.apply(t);
+        mappedData.add(r);
+    }
+
+    return mappedData.stream();
+}
+```
+La operación map parece simple ya vista de esta manera. Sin embargo, por dentro de las diferentes implementaciones de Stream hace varias validaciones y optimizaciones para que la operación pueda ser invocada en paralelo, para prevenir algunos errores de conversión de tipos y hacer que sea mas rápida que nuestra versión con un for.
+	
+## flatMap
+En ocasiones no podremos evitar encontrarnos con streams del tipo Stream>, donde tenemos datos con muchos datos…
+
+Este tipo de streams es bastante común y puede pasarte por multiples motivos. Se puede tornar difícil operar el Stream inicial si queremos aplicar alguna operación a cada uno de los elementos en cada una de las listas.
+
+Si mantener la estructura de las listas (o colecciones) no es importante para el procesamiento de los datos que contengan, entonces podemos usar flatMap para simplificar la estructura del Stream, pasándolo de Stream> a Stream.
+	
+```java
+Stream> coursesLists; // Stream{List["Java", "Java 8 Functional", "Spring"], List["React", "Angular", "Vue.js"], List["Big Data", "Pandas"]}
+Stream allCourses; // Stream{ ["Java", "Java 8 Functional", "Spring", "React", "Angular", "Vue.js", "Big Data", "Pandas"]}
+//flatMap tiene la siguiente forma
+Stream flatMap(Functionsuper T, ? extends Stream> mapper)
+```
+Lo interesante es que el resultado de la función mapper debe ser un Stream. Stream usará el resultado de mapper para “acumular” elementos en un Stream desde otro Stream. Puede sonar confuso, por lo que ejemplificarlo nos ayudará a entenderlo mejor:
+
+```java
+//Tenemos esta clase:
+public class PlatziStudent {
+    private boolean emailSubscribed;
+    private List emails;
+
+    public boolean isEmailSubscribed() {
+        return emailSubscribed;
+    }
+
+    public List getEmails(){
+        return new LinkedList<>(emails); //Creamos una copia de la lista para mantener la clase inmutable por seguridad
+    }
+}
+
+//Primero obtenemos objetos de tipo usuario registrados en Platzi:
+Stream platziStudents = getPlatziUsers().stream();
+
+// Despues, queremos enviarle un correo a todos los usuarios pero… solo nos interesa obtener su correo para notificarlos:
+Stream allEmailsToNotify = 
+                        platziStudents.filter(PlatziStudent::isEmailSubscribed) //Primero evitamos enviar correos a quienes no estén subscritos
+                                    .flatMap(student -> student.getEmails().stream()); // La lambda genera un nuevo Stream de la lista de emails de cada studiante.
+
+sendMonthlyEmails(allEmailsToNotify);
+//El Stream final solo es un Stream de emails, sin mas detalles ni información adicional.
+```
+flatMap es una manera en la que podemos depurar datos de información adicional que no sea necesaria.
+	
+## distinct
+Esta operacion es simple:
+
+```java
+Stream distinct()
+```
+Lo que hace es comparar cada elemento del Stream contra el resto usando el método equals. De esta manera, evita que el Stream contenga elementos duplicados. La operación, al ser intermedia, retorna un nuevo Stream donde los elementos son únicos. Recuerda que para garantizar esto es recomendable que sobrescribas el método equals en tus clases que representen datos.
+
+## limit
+La operación limit recibe un long que determina cuántos elementos del Stream original seran preservados. Si el número es mayor a la cantidad inicial de elementos en el Stream, básicamente, todos los elementos seguirán en el Stream. Un detalle interesante es que algunas implementaciones de Stream pueden estar ordenadas (sorted()) o explícitamente no ordenadas (unordered()), lo que puede cambiar drásticamente el resultado de la operación y el performance.
+```java
+Stream limit(long maxSize)
+```
+La operación asegura que los elementos en el Stream resultante serán los primeros en aparecer en el Stream. Es por ello que la operación es ligera cuando el Stream es secuencial o se usó la operación unordered() (no disponible en todos los Streams, ya que la operación pertenece a otra clase).
+
+Como reto adicional, crea el código para representar lo que hace la operación limit.
+
+## peek
+peek funciona como una lupa, como un momento de observación de lo que está pasando en el Stream. Lo que hace esta operación es tomar un Consumer, pasar los datos conforme van estando presentes en el Stream y generar un nuevo Stream idéntico para poder seguir operando.
+
+La estructura de peek es simple:
+```java
+Stream peek(Consumersuper T> consumer)
+```
+Usarlo puede ayudarnos a generar logs o registros de los datos del Stream, por ejemplo:
+```java
+Stream serverConnections =
+    server.getConnectionsStream()
+        .peek(connection -> logConnection(connection, new Date()))
+        .filter(…)
+        .map(…)
+    //Otras operaciones…
+```
+## skip
+Esta operación es contraria a limit(). Mientras limit() reduce los elementos presentes en el Stream a un numero especifico, skip descarta los primeros n elementos y genera un Stream con los elementos restantes en el Stream.
+
+Esto es:
+```java
+Stream first10Numbers = Stream.of(0,1,2,3,4,5,6,7,8,9);
+Stream last7Numbers = first10Numbers.skip(3); // 3,4,5,6,7,8,9
+```
+Esto puede ser de utilidad si sabemos qué parte de la información puede ser descartable. Por ejemplo, descartar la primera línea de un XML (), descartar metadatos de una foto, usuarios de prueba al inicio de una base de datos, el intro de un video, etc.
+	
+
+## sorted
+La operación sorted() requiere que los elementos presentes en el Stream implementen la interfaz Comparable para poder hacer un ordenamiento de manera natural dentro del Stream. El Stream resultante contiene todos los elementos pero ya ordenados, hacer un ordenamiento tiene muchas ventajas, te recomiendo los cursos de algoritmos de Platzi para poder conocer a mas detalle estas ventajas.
+
+## Conclusiones
+Las operaciones intermedias nos permiten tener control sobre los streams y manipular sus contenidos de manera sencilla sin preocuparnos realmente por cómo se realizan los cambios.
+
+Recuerda que las operaciones intermedias tienen la funcionalidad de generar nuevos streams que podremos dar como resultado para que otras partes del código los puedan utilizar.
+
+Aunque existen otras operaciones intermedias en diferentes implementaciones de Stream, las que aquí listamos están presentes en la interfaz base, por lo que entender estas operaciones te facilitara la vida en la mayoría de los usos de Stream
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
