@@ -444,5 +444,95 @@ Agrega todos los elementos del Stream a un arreglo y nos retorna dicho arreglo. 
 
 ## Collect
 Mencionamos la operación collect en la lectura sobre operaciones y collectors, donde mencionamos que:
+Collector es una interfaz que tomara datos de tipo T del Stream, un tipo de dato mutable A, donde se irán agregando los elementos (mutable implica que podemos cambiar su contenido, como un LinkedList) y generara un resultado de tipo R.
+Usando java.util.stream.Collectors podemos convertir sencillamente un Stream en un Set, Map, List, Collection, etc. La clase Collectors ya cuenta con métodos para generar un Collector que corresponda con el tipo de dato que tu Stream esta usando. Incluso vale la pena resaltar que Collectors puede generar un ConcurrentMap que puede ser de utilidad si requieres de multiples threads.
+
+```java
+public List getJavaCourses(Stream coursesStream) {
+    List javaCourses =
+        coursesStream.filter(course -> course.contains("Java"))
+            .collect(Collectors.toList());
+
+    return javaCourses;
+}
+```
+
+## forEach
+Tan simple y tan lindo como un clásico for. forEach es una operación que recibe un Consumer y no tiene un valor de retorno (void). La principal utilidad de esta operación es dar un uso final a los elementos del Stream.
+```java
+Stream> courses = getCourses();
+courses.forEach(courseList -> System.out.println("Cursos disponibles: " + courseList));
+```
+
+## Operaciones intermedias
+En clases anteriores hablamos de dos tipos de operaciones: **intermedias y finales**. No se explicaron a profundidad, pero en esta lectura iremos más a fondo en las **operaciones intermedias** y trataremos de entender qué sucede por dentro de cada una.
+
+Se le dice **operación intermedia** a toda operación dentro de un Stream que como resultado devuelva un nuevo Stream. Es decir, tras invocar una operación intermedia con un cierto tipo de dato, obtendremos como resultado un nuevo Stream conteniendo los datos ya modificados.
+
+El Stream que recibe la operación intermedia pasa a ser “consumido” posterior a la invocación de la operación, quedando inutilizable para posteriores operaciones. Si decidimos usar el Stream para algún otro tipo de operaciones tendremos un IllegalStateException.
+
+```java
+Stream initialCourses = Stream.of("Java", "Spring", "Node.js");
+
+Stream lettersOnCourses = initialCourses.map(course -> course.length());
+//De este punto en adelante, initialCourses ya no puede agregar mas operaciones.
+
+Stream evenLengthCourses = lettersOnCourses.filter(courseLength -> courseLength % 2 == 0);
+//lettersOnCourses se consume en este punto y ya no puede agregar mas operaciones. No es posible usar el Stream mas que como referencia.
+```
+## Operaciones disponibles
+La **interfaz Stream** cuenta con un grupo de operaciones intermedias. A lo largo de esta lectura explicaremos cada una de ellas y trataremos de aproximar su funcionalidad. Cada operación tiene implementaciones distintas según la implementación de Stream, en nuestro caso, haremos solo aproximaciones de la lógica que sigue la operación.
+
+Las operaciones que ya están definidas son:
+* filter(…)
+* map(…)
+* flatMap(…)
+* distinct(…)
+* limit(…)
+* peek(…)
+* skip(…)
+* sorted(…)
+
+## Filter
+```java
+Stream filter(Predicatesuper T> predicate)
+```
+Algunas cosas que podemos deducir únicamente viendo los elementos de la operación son:
+
+* La operación trabaja sobre un Stream y nos devuelve un nuevo Stream del mismo tipo (T)
+* Sin embargo, el Predicate que recibe como parámetro trabaja con elementos de tipo T y cualquier elemento siempre que sea un subtipo de T. Esto quiere decir que si tenemos la clase PlatziStudent extends Student y tenemos un Stream donde también tenemos elementos de tipo PlatziStudent, podemos filtrarlos sin tener que revisar o aclarar el tipo
+* Predicate es una @FunctionalInterface (como lo viste en la clase 11), lo cual nos permite pasar como parámetro objetos que implementen esta interfaz o lambdas
+
+```java
+public Stream getJavaCourses(List courses){
+    return courses.stream()
+        .filter(course -> course.contains("Java"));
+}
+```
+Lo interesante radica en la condición que usamos en nuestra lambda, con ella determinamos si un elemento debe permanecer o no en el Stream resultante. En la lectura anterior hicimos una aproximación de la operación filter:
+```java
+public Stream filter(Predicate predicate) {
+    List filteredData = new LinkedList<>();
+    for(T t : this.data){
+        if(predicate.test(t)){
+            filteredData.add(t);
+        }
+    }
+
+    return filteredData.stream();
+}
+```	
+filter se encarga de iterar cada elemento del Stream y evaluar con el Predicate si el elemento debe estar o no en el Stream resultante. Si nuestro Predicate es sencillo y no incluye ningún ciclo o llamadas a otras funciones que puedan tener ciclos, la complejidad del tiempo es de O(n), lo cual hace que el filtrado sea bastante rápido.
+
+Usos comunes de filter es limpiar un Stream de datos que no cumplan un cierto criterio. Como ejemplo podrías pensar en un Stream de transacciones bancarias, mantener el Stream solo aquellas que superen un cierto monto para mandarlas a auditoria, de un grupo de calificaciones de alumnos filtrar únicamente por aquellos que aprobaron con una calificación superior a 6, de un grupo de objetos JSON conservar aquellos que tengan una propiedad en especifico, etc.
+
+Entre mas sencilla sea la condición de filtrado, más legible sera el código. Te recomiendo que, si tienes más de una condición de filtrado, no le temas a usar varias veces filter:
+
+```java
+courses.filter(course -> course.getName().contains("Java"))
+    .filter(course -> course.getDuration() > 2.5)
+    .filter(course -> course.getInstructor().getName() == Instructors.SINUHE_JAIME)
+```
+
 
 
