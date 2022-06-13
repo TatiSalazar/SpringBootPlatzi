@@ -679,9 +679,26 @@ Recuerda que las operaciones intermedias tienen la funcionalidad de generar nuev
 
 Aunque existen otras operaciones intermedias en diferentes implementaciones de Stream, las que aquí listamos están presentes en la interfaz base, por lo que entender estas operaciones te facilitara la vida en la mayoría de los usos de Stream
 	
+## Gradle
+En nuestro archivo de [gradle] agregamos 3 dependencias.
+Estas tres dependencias (librerias) nos van a facilitar crear nuetro proyecto.
+Las tres dependencia son librerias que vamos a estar utilizando a lo largo del proyecto.
 
+* jcommander: tomara los argumentos que pasamos al programa por terminal y nos genera objetos de java que podremos manipular o revisar lo que aya pasado por terminal.
 
+* feign-core: se encargara de hacer peticiones web, hara llamadas a la API de GitHub y nos devolvera un resultado como #response que viene en formato de Json. asi que tenemos que convertir de Json a objeto de Java.
 
+* feign-Gson: tomara el resultado en Json, lo procesara y nos dara clases y objetos de Java que podremos manipular y utilizar en el proyecto.
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    // https://mvnrepository.com/artifact/com.beust/jcommander
+    implementation group: 'com.beust', name: 'jcommander', version: '1.81'
+    // https://mvnrepository.com/artifact/io.github.openfeign/feign-core
+    implementation group: 'io.github.openfeign', name: 'feign-core', version: '11.2'
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.7'
+}
 
 
 
