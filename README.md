@@ -690,6 +690,7 @@ Las tres dependencia son librerias que vamos a estar utilizando a lo largo del p
 
 * feign-Gson: tomara el resultado en Json, lo procesara y nos dara clases y objetos de Java que podremos manipular y utilizar en el proyecto.
 
+```java
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     // https://mvnrepository.com/artifact/com.beust/jcommander
@@ -699,7 +700,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.7'
 }
-
+```
 
 
 
